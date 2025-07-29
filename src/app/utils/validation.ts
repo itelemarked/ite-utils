@@ -23,8 +23,45 @@ export const isFunction = (val: any): val is ((...args: any) => any) => typeof v
  */
 export const isOptional = (val: any) => true
 
-
-export const isInterface = <T extends Record<string, any>>(val: any, fns: Record<string, ((arg: any) => boolean)[]>): val is T => {
+/**
+ * Example of use:
+ * 
+ * Given the following interface 'Graph' and a 'graph1' variable: 
+ * 
+ *  type Graph = {
+ *    xLabel: string, 
+ *    yLabel: string, 
+ *    origin: {
+ *      x: number, 
+ *      y: number
+ *    },
+ *    description?: string
+ *  }
+ * 
+ *  const graph1 = {
+ *    xLabel: 'time',
+ *    yLabel: 'distance',
+ *    origin: {
+ *      x: 10,
+ *      y: 10
+ *    }
+ *  }
+ * 
+ *  const interfaceGraph = {
+ *    xLabel: [isString],
+ *    yLabel: [isString],
+ *    origin: [
+ *      isInterface({
+ *        x: [isNumber],
+ *        y: [isNumber]
+ *      })
+ *    ],
+ *    description: [isString, isOptional]
+ *  }
+ * 
+ *  console.log(isInterface<Graph>(interfaceGraph)(graph1))
+ */
+export const isInterface = <T extends Record<string, any>>(fns: Record<string, ((arg: any) => boolean)[]>) => (val: any): val is T => {
   // CHECKS 'val' IS A 'PlainObject'
   if(!isPlainObject(val)) return false
 

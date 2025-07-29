@@ -82,9 +82,56 @@ describe('validation.ts', () => {
     }
 
     const interface5 = {
-      x: [ (val: any) => isInterface(val, {mgrs: [isString], latlong: [isString]}) ],
-      y: [isNumber]
+      x: [
+        isInterface({
+          mgrs: [isString], 
+          latlong: [isString]
+        })
+      ],
+      y: [
+        isNumber
+      ]
     }
+
+    const interfaceGraph1 = {
+      xLabel: [isString],
+      yLabel: [isString],
+      origin: [
+        isInterface({
+          x: [isNumber],
+          y: [isNumber]
+        })
+      ],
+      description: [isString, isOptional]
+    }
+
+    const interfaceGraph2 = {
+      xLabel: [isString],
+      yLabel: [isString],
+      origin: [
+        isInterface({
+          x: [isNumber],
+          y: [isNumber]
+        }),
+        isOptional
+      ],
+      description: [isString, isOptional]
+    }
+
+    const graph1 = {
+      xLabel: 'time',
+      yLabel: 'distance',
+      origin: {
+        x: 10,
+        y: 10
+      }
+    }
+
+    const graph2 = {
+      xLabel: 'time',
+      yLabel: 'distance',
+    }
+    
     const val1 = {
       x: 1,
       y: 2,
@@ -118,28 +165,34 @@ describe('validation.ts', () => {
     }
 
     it('first', () => {
-      expect( isInterface(val1, interface1)).toEqual(true);
+      expect( isInterface(interface1)(val1)).toEqual(true);
     })
     it('second', () => {
-      expect( isInterface(val2, interface2)).toEqual(true);
+      expect( isInterface(interface2)(val2)).toEqual(true);
     })
     it('third-a', () => {
-      expect( isInterface(val3a, interface3)).toEqual(true);
+      expect( isInterface(interface3)(val3a)).toEqual(true);
     })
     it('third-b', () => {
-      expect( isInterface(val3b, interface3)).toEqual(true);
+      expect( isInterface(interface3)(val3b)).toEqual(true);
     })
     it('fourth-a', () => {
-      expect( isInterface(val4, interface1)).toEqual(false);
+      expect( isInterface(interface1)(val4)).toEqual(false);
     })
     it('fourth-b', () => {
-      expect( isInterface(val4, interface2)).toEqual(false);
+      expect( isInterface(interface2)(val4)).toEqual(false);
     })
     it('fourth-c', () => {
-      expect( isInterface(val4, interface3)).toEqual(false);
+      expect( isInterface(interface3)(val4)).toEqual(false);
     })
     it('fifth', () => {
-      expect( isInterface(val5, interface5)).toEqual(true);
+      expect( isInterface(interface5)(val5)).toEqual(true);
+    })
+    it('graph-1 example', () => {
+      expect( isInterface(interfaceGraph1)(graph1)).toEqual(true);
+    })
+    it('graph-2 example', () => {
+      expect( isInterface(interfaceGraph2)(graph2)).toEqual(true);
     })
   });
 
